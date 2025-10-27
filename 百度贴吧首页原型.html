@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百度贴吧 - 全球最大的中文社区</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 顶部导航栏 */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #e8e8e8;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2D7DD2;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #2D7DD2;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            display: flex;
+            width: 400px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #2D7DD2;
+            border-right: none;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            background-color: #2D7DD2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-btn {
+            padding: 8px 20px;
+            border: 2px solid #2D7DD2;
+            border-radius: 20px;
+            background-color: transparent;
+            color: #2D7DD2;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .auth-btn:hover {
+            background-color: #2D7DD2;
+            color: white;
+        }
+        
+        /* 轮播图区域 */
+        .carousel {
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2D7DD2, #4A90E2);
+        }
+        
+        .carousel-content {
+            height: 100%;
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .indicator.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .left-column {
+            width: 35%;
+        }
+        
+        .right-column {
+            width: 65%;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 20px;
+        }
+        
+        .tieba-name {
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .tieba-members {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .tieba-list {
+            list-style: none;
+        }
+        
+        .tieba-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s;
+        }
+        
+        .tieba-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .tieba-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #2D7DD2;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .tieba-info {
+            flex: 1;
+        }
+        
+        .tieba-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .tieba-members {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .post-list {
+            list-style: none;
+        }
+        
+        .post-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s;
+        }
+        
+        .post-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .post-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .post-author {
+            color: #2D7DD2;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #e8e8e8;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .footer-links {
+            margin-top: 5px;
+        }
+        
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer-links a:hover {
+            color: #2D7DD2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航栏 -->
+        <header class="header">
+            <nav class="nav">
+                <div class="logo">
+                    <div class="logo-icon">贴</div>
+                    百度贴吧
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜索贴吧或帖子">
+                    <button class="search-btn">搜索</button>
+                </div>
+                <div class="auth-buttons">
+                    <button class="auth-btn" onclick="window.location.href='用户个人中心原型.html'">登录</button>
+                    <button class="auth-btn">注册</button>
+                </div>
+            </nav>
+        </header>
+        
+        <!-- 轮播图区域 -->
+        <section class="carousel">
+            <div class="carousel-content">
+                <div class="carousel-item" style="background: linear-gradient(135deg, #2D7DD2, #4A90E2);">
+                    数码科技新品讨论
+                </div>
+                <div class="carousel-item" style="background: linear-gradient(135deg, #FF6B6B, #FF8E53);">
+                    动漫新番推荐
+                </div>
+                <div class="carousel-item" style="background: linear-gradient(135deg, #4ECDC4, #44A08D);">
+                    校园生活分享
+                </div>
+            </div>
+            <div class="carousel-indicators">
+                <div class="indicator active"></div>
+                <div class="indicator"></div>
+                <div class="indicator"></div>
+            </div>
+        </section>
+        
+        <!-- 中间内容区 -->
+        <main class="content">
+            <div class="content-wrapper">
+                <!-- 左栏：热门贴吧列表 -->
+                <aside class="left-column">
+                    <h2 class="section-title">热门贴吧列表</h2>
+                    <ul class="tieba-list">
+                        <li class="tieba-item" onclick="window.location.href='数码科技吧详情页原型.html'">
+                            <div class="tieba-avatar">数</div>
+                            <div class="tieba-info">
+                                <div class="tieba-name">数码科技吧</div>
+                                <div class="tieba-members">500万成员</div>
+                            </div>
+                        </li>
+                        <li class="tieba-item">
+                            <div class="tieba-avatar">动</div>
+                            <div class="tieba-info">
+                                <div class="tieba-name">动漫游戏吧</div>
+                                <div class="tieba-members">400万成员</div>
+                            </div>
+                        </li>
+                        <li class="tieba-item">
+                            <div class="tieba-avatar">美</div>
+                            <div class="tieba-info">
+                                <div class="tieba-name">美妆时尚吧</div>
+                                <div class="tieba-members">300万成员</div>
+                            </div>
+                        </li>
+                        <li class="tieba-item">
+                            <div class="tieba-avatar">校</div>
+                            <div class="tieba-info">
+                                <div class="tieba-name">校园生活吧</div>
+                                <div class="tieba-members">250万成员</div>
+                            </div>
+                        </li>
+                        <li class="tieba-item">
+                            <div class="tieba-avatar">职</div>
+                            <div class="tieba-info">
+                                <div class="tieba-name">职场交流吧</div>
+                                <div class="tieba-members">200万成员</div>
+                            </div>
+                        </li>
+                    </ul>
+                </aside>
+                
+                <!-- 右栏：热门帖子列表 -->
+                <section class="right-column">
+                    <h2 class="section-title">热门帖子列表</h2>
+                    <ul class="post-list">
+                        <li class="post-item">
+                            <div class="post-title">【评测】新手机续航测试</div>
+                            <div class="post-meta">
+                                <span class="post-author">作者：数码达人</span>
+                                <span>回复128</span>
+                                <span>2025-10-26 15:30</span>
+                            </div>
+                        </li>
+                        <li class="post-item">
+                            <div class="post-title">【讨论】最新动漫剧情分析</div>
+                            <div class="post-meta">
+                                <span class="post-author">作者：动漫爱好者</span>
+                                <span>回复95</span>
+                                <span>2025-10-26 14:20</span>
+                            </div>
+                        </li>
+                        <li class="post-item">
+                            <div class="post-title">【分享】校园生活小技巧</div>
+                            <div class="post-meta">
+                                <span class="post-author">作者：校园达人</span>
+                                <span>回复76</span>
+                                <span>2025-10-26 13:15</span>
+                            </div>
+                        </li>
+                        <li class="post-item">
+                            <div class="post-title">【求助】职场新人如何快速适应</div>
+                            <div class="post-meta">
+                                <span class="post-author">作者：职场小白</span>
+                                <span>回复63</span>
+                                <span>2025-10-26 12:05</span>
+                            </div>
+                        </li>
+                        <li class="post-item">
+                            <div class="post-title">【教程】美妆技巧分享</div>
+                            <div class="post-meta">
+                                <span class="post-author">作者：美妆博主</span>
+                                <span>回复52</span>
+                                <span>2025-10-26 11:30</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+        
+        <!-- 页脚区域 -->
+        <footer class="footer">
+            <div>© 2025 百度贴吧原型</div>
+            <div class="footer-links">
+                <a href="#">隐私政策</a>
+                <a href="#">用户协议</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 轮播图功能
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const indicators = document.querySelectorAll('.indicator');
+        
+        function showSlide(index) {
+            const carouselContent = document.querySelector('.carousel-content');
+            carouselContent.style.transform = `translateX(-${index * 100}%)`;
+            
+            // 更新指示器状态
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+            
+            currentSlide = index;
+        }
+        
+        // 自动轮播
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 3000);
+        
+        // 点击指示器切换轮播图
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                showSlide(index);
+            });
+        });
+    </script>
+</body>
+</html>
