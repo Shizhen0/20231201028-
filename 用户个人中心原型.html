@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户个人中心 - 百度贴吧</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 顶部导航栏 */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #e8e8e8;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2D7DD2;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #2D7DD2;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            display: flex;
+            width: 400px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #2D7DD2;
+            border-right: none;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            background-color: #2D7DD2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-btn {
+            padding: 8px 20px;
+            border: 2px solid #2D7DD2;
+            border-radius: 20px;
+            background-color: transparent;
+            color: #2D7DD2;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .auth-btn:hover {
+            background-color: #2D7DD2;
+            color: white;
+        }
+
+        /* 个人中心内容区域 */
+        .profile-content {
+            padding: 30px 20px;
+            min-height: 600px;
+        }
+
+        /* 个人信息展示区 */
+        .profile-info {
+            display: flex;
+            align-items: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .avatar-section {
+            margin-right: 30px;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            border: 3px solid #2D7DD2;
+        }
+
+        .info-section {
+            flex: 1;
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .nickname {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .nickname-text {
+            color: #2D7DD2;
+            font-size: 16px;
+        }
+
+        .edit-icon {
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .basic-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .info-item {
+            color: #FF6B9D;
+            font-size: 14px;
+        }
+
+        /* 功能导航栏 */
+        .nav-tabs {
+            display: flex;
+            border-bottom: 2px solid #e8e8e8;
+            margin-bottom: 30px;
+        }
+
+        .nav-tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #2D7DD2;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #2D7DD2;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+
+        /* 内容展示区 */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* 我的帖子样式 */
+        .post-list {
+            list-style: none;
+        }
+
+        .post-item {
+            padding: 20px;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .post-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-info {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* 我的收藏样式 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* 消息通知样式 */
+        .message-list {
+            list-style: none;
+        }
+
+        .message-item {
+            padding: 20px;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+        }
+
+        .message-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .message-count {
+            color: #2D7DD2;
+            font-size: 14px;
+        }
+
+        /* 设置样式 */
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #e8e8e8;
+            margin-bottom: 20px;
+        }
+
+        .setting-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .setting-tab.active {
+            color: #2D7DD2;
+            border-bottom: 2px solid #2D7DD2;
+        }
+
+        .setting-content {
+            display: none;
+        }
+
+        .setting-content.active {
+            display: block;
+        }
+
+        .setting-item {
+            margin-bottom: 20px;
+        }
+
+        .setting-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .setting-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* 页脚区域 */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #e8e8e8;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .footer-links {
+            margin-top: 5px;
+        }
+        
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer-links a:hover {
+            color: #2D7DD2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航栏 -->
+        <header class="header">
+            <nav class="nav">
+                <div class="logo">
+                    <div class="logo-icon">贴</div>
+                    百度贴吧
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜索贴吧或帖子">
+                    <button class="search-btn">搜索</button>
+                </div>
+                <div class="auth-buttons">
+                    <button class="auth-btn" onclick="window.location.href='百度贴吧首页原型.html'">首页</button>
+                    <button class="auth-btn">退出</button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- 个人中心内容区域 -->
+        <main class="profile-content">
+            <!-- 个人信息展示区 -->
+            <section class="profile-info">
+                <div class="avatar-section">
+                    <div class="user-avatar">🐱</div>
+                </div>
+                <div class="info-section">
+                    <div class="username">石珍</div>
+                    <div class="nickname">
+                        <span class="nickname-text">陶小桃</span>
+                        <span class="edit-icon">✏️ 编辑</span>
+                    </div>
+                    <div class="basic-info">
+                        <span class="info-item">性别：女</span>
+                        <span class="info-item">生日：2003-05-30</span>
+                        <span class="info-item">星座：双子座</span>
+                        <span class="info-item">邮箱：2131717019@qq.com</span>
+                        <span class="info-item">电话：13312201172</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 功能导航栏 -->
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-tab="posts">我的帖子</button>
+                <button class="nav-tab" data-tab="favorites">我的收藏</button>
+                <button class="nav-tab" data-tab="messages">消息通知</button>
+                <button class="nav-tab" data-tab="settings">设置</button>
+            </nav>
+
+            <!-- 内容展示区 - 我的帖子 -->
+            <section class="content-section active" id="posts">
+                <ul class="post-list">
+                    <li class="post-item">
+                        <div class="post-title">我用了3个月的旗舰机，说说真实体验</div>
+                        <div class="post-meta">
+                            <div class="post-info">
+                                <span>数码科技吧</span>
+                                <span style="margin-left: 20px;">2025-10-20 10:00</span>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn">编辑</button>
+                                <button class="action-btn">删除</button>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="post-item">
+                        <div class="post-title">【分享】最新数码产品使用心得</div>
+                        <div class="post-meta">
+                            <div class="post-info">
+                                <span>数码科技吧</span>
+                                <span style="margin-left: 20px;">2025-10-18 14:30</span>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn">编辑</button>
+                                <button class="action-btn">删除</button>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="post-item">
+                        <div class="post-title">【讨论】未来科技发展趋势分析</div>
+                        <div class="post-meta">
+                            <div class="post-info">
+                                <span>科技前沿吧</span>
+                                <span style="margin-left: 20px;">2025-10-15 09:15</span>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn">编辑</button>
+                                <button class="action-btn">删除</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 内容展示区 - 我的收藏 -->
+            <section class="content-section" id="favorites">
+                <div class="empty-state">暂无收藏帖子</div>
+            </section>
+
+            <!-- 内容展示区 - 消息通知 -->
+            <section class="content-section" id="messages">
+                <ul class="message-list">
+                    <li class="message-item">
+                        <div class="message-title">系统通知 <span class="message-count">(2条)</span></div>
+                        <div>• 您的帖子"我用了3个月的旗舰机，说说真实体验"获得100个赞</div>
+                        <div>• 系统维护通知：本周六凌晨2-4点进行系统维护</div>
+                    </li>
+                    <li class="message-item">
+                        <div class="message-title">评论回复 <span class="message-count">(5条)</span></div>
+                        <div>• 用户"数码达人"回复了您的帖子</div>
+                        <div>• 用户"科技爱好者"在您的帖子下发表了评论</div>
+                        <div>• 用户"小白用户"向您提问</div>
+                        <div>• 用户"专业评测"点赞了您的回复</div>
+                        <div>• 用户"技术大牛"分享了您的帖子</div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 内容展示区 - 设置 -->
+            <section class="content-section" id="settings">
+                <div class="settings-tabs">
+                    <button class="setting-tab active" data-setting="profile">个人信息修改</button>
+                    <button class="setting-tab" data-setting="password">密码修改</button>
+                    <button class="setting-tab" data-setting="notifications">消息设置</button>
+                </div>
+
+                <div class="setting-content active" id="profile-setting">
+                    <div class="setting-item">
+                        <label class="setting-label">用户名</label>
+                        <input type="text" class="setting-input" value="石珍">
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">昵称</label>
+                        <input type="text" class="setting-input" value="陶小桃">
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">邮箱</label>
+                        <input type="email" class="setting-input" value="2131717019@qq.com">
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">电话</label>
+                        <input type="tel" class="setting-input" value="13312201172">
+                    </div>
+                </div>
+
+                <div class="setting-content" id="password-setting">
+                    <div class="setting-item">
+                        <label class="setting-label">当前密码</label>
+                        <input type="password" class="setting-input" placeholder="请输入当前密码">
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">新密码</label>
+                        <input type="password" class="setting-input" placeholder="请输入新密码">
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">确认新密码</label>
+                        <input type="password" class="setting-input" placeholder="请再次输入新密码">
+                    </div>
+                </div>
+
+                <div class="setting-content" id="notifications-setting">
+                    <div class="setting-item">
+                        <label class="setting-label">系统通知</label>
+                        <select class="setting-input">
+                            <option>接收所有通知</option>
+                            <option>仅接收重要通知</option>
+                            <option>不接收通知</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">评论回复通知</label>
+                        <select class="setting-input">
+                            <option>实时通知</option>
+                            <option>每日汇总</option>
+                            <option>不通知</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">私信通知</label>
+                        <select class="setting-input">
+                            <option>实时通知</option>
+                            <option>仅好友通知</option>
+                            <option>不通知</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚区域 -->
+        <footer class="footer">
+            <div>© 2025 百度贴吧原型</div>
+            <div class="footer-links">
+                <a href="#">隐私政策</a>
+                <a href="#">用户协议</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 功能导航栏切换
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有激活状态
+                navTabs.forEach(t => t.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // 添加当前激活状态
+                tab.classList.add('active');
+                const targetId = tab.getAttribute('data-tab');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // 设置选项卡切换
+        const settingTabs = document.querySelectorAll('.setting-tab');
+        const settingContents = document.querySelectorAll('.setting-content');
+
+        settingTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有激活状态
+                settingTabs.forEach(t => t.classList.remove('active'));
+                settingContents.forEach(content => content.classList.remove('active'));
+
+                // 添加当前激活状态
+                tab.classList.add('active');
+                const targetSetting = tab.getAttribute('data-setting');
+                document.getElementById(targetSetting + '-setting').classList.add('active');
+            });
+        });
+
+        // 编辑按钮点击事件
+        const editButtons = document.querySelectorAll('.action-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.textContent;
+                const postTitle = this.closest('.post-item').querySelector('.post-title').textContent;
+                
+                if (action === '编辑') {
+                    alert(`准备编辑帖子：${postTitle}`);
+                } else if (action === '删除') {
+                    if (confirm(`确定要删除帖子：${postTitle} 吗？`)) {
+                        this.closest('.post-item').style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // 编辑昵称功能
+        const editIcon = document.querySelector('.edit-icon');
+        editIcon.addEventListener('click', function() {
+            const currentNickname = document.querySelector('.nickname-text').textContent;
+            const newNickname = prompt('请输入新的昵称：', currentNickname);
+            if (newNickname && newNickname !== currentNickname) {
+                document.querySelector('.nickname-text').textContent = newNickname;
+            }
+        });
+    </script>
+</body>
+</html>

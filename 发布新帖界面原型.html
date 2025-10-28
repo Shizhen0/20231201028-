@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布新帖 - 数码科技吧 - 百度贴吧</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+        }
+        
+        /* 顶部导航栏 - 复用首页样式 */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #e8e8e8;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2D7DD2;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #2D7DD2;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            display: flex;
+            width: 400px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #2D7DD2;
+            border-right: none;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            background-color: #2D7DD2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .auth-btn {
+            padding: 8px 20px;
+            border: 2px solid #2D7DD2;
+            border-radius: 20px;
+            background-color: transparent;
+            color: #2D7DD2;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .auth-btn:hover {
+            background-color: #2D7DD2;
+            color: white;
+        }
+        
+        /* 页面标题区域 */
+        .page-title-section {
+            padding: 30px 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 15px;
+        }
+        
+        /* 发帖表单区域 */
+        .post-form-section {
+            padding: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .post-form {
+            width: 800px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .form-row {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .category-select {
+            width: 200px;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            background-color: #fff;
+        }
+        
+        .category-select:focus {
+            border-color: #2D7DD2;
+        }
+        
+        .title-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .title-input:focus {
+            border-color: #2D7DD2;
+        }
+        
+        .title-input::placeholder {
+            color: #999;
+        }
+        
+        /* 富文本编辑器 */
+        .editor-container {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .editor-toolbar {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e8e8e8;
+            padding: 10px 15px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .toolbar-btn {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .toolbar-btn:hover {
+            background-color: #e9ecef;
+            color: #333;
+        }
+        
+        .editor-content {
+            height: 300px;
+            padding: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            outline: none;
+            overflow-y: auto;
+            color: #666;
+        }
+        
+        .editor-content:empty:before {
+            content: "请输入帖子内容...";
+            color: #999;
+        }
+        
+        /* 图片上传区域 */
+        .image-upload {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+        
+        .image-upload:hover {
+            border-color: #2D7DD2;
+            background-color: #f8f9fa;
+        }
+        
+        .upload-icon {
+            font-size: 24px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .upload-count {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* 表情选择器入口 */
+        .emoji-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .emoji-btn {
+            background: none;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .emoji-btn:hover {
+            border-color: #999;
+            color: #333;
+        }
+        
+        .emoji-icon {
+            font-size: 14px;
+        }
+        
+        /* 提交按钮区 */
+        .submit-section {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e8e8;
+        }
+        
+        .preview-btn {
+            padding: 10px 25px;
+            background-color: transparent;
+            color: #666;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .preview-btn:hover {
+            border-color: #999;
+            color: #333;
+        }
+        
+        .submit-btn {
+            padding: 10px 25px;
+            background-color: #2D7DD2;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #1a6bc4;
+        }
+        
+        .loading-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航栏 -->
+        <header class="header">
+            <nav class="nav">
+                <div class="logo">
+                    <div class="logo-icon">贴</div>
+                    百度贴吧
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜索贴吧或帖子">
+                    <button class="search-btn">搜索</button>
+                </div>
+                <div class="auth-buttons">
+                    <button class="auth-btn" onclick="window.location.href='用户个人中心原型.html'">登录</button>
+                    <button class="auth-btn">注册</button>
+                </div>
+            </nav>
+        </header>
+        
+        <!-- 页面标题区域 -->
+        <section class="page-title-section">
+            <h1 class="page-title">发布新帖 - 数码科技吧</h1>
+        </section>
+        
+        <!-- 发帖表单区域 -->
+        <main class="post-form-section">
+            <form class="post-form">
+                <!-- 第一行：选择分类 -->
+                <div class="form-row">
+                    <label class="form-label">选择分类</label>
+                    <select class="category-select">
+                        <option value="">请选择分类</option>
+                        <option value="product-review">产品评测</option>
+                        <option value="tech-discussion">技术讨论</option>
+                        <option value="help-qa">求助问答</option>
+                        <option value="chat">闲聊杂谈</option>
+                    </select>
+                </div>
+                
+                <!-- 第二行：帖子标题 -->
+                <div class="form-row">
+                    <label class="form-label">帖子标题</label>
+                    <input type="text" class="title-input" placeholder="请输入帖子标题，不超过50字" maxlength="50">
+                </div>
+                
+                <!-- 第三行：富文本编辑器 -->
+                <div class="form-row">
+                    <label class="form-label">帖子内容</label>
+                    <div class="editor-container">
+                        <div class="editor-toolbar">
+                            <button type="button" class="toolbar-btn">
+                                <span>B</span>
+                                加粗
+                            </button>
+                            <button type="button" class="toolbar-btn">
+                                <span>📷</span>
+                                插入图片
+                            </button>
+                            <button type="button" class="toolbar-btn">
+                                <span>😊</span>
+                                插入表情
+                            </button>
+                            <button type="button" class="toolbar-btn">
+                                <span>@</span>
+                                @好友
+                            </button>
+                        </div>
+                        <div class="editor-content" contenteditable="true"></div>
+                    </div>
+                </div>
+                
+                <!-- 第四行：图片上传 -->
+                <div class="form-row">
+                    <label class="form-label">图片上传</label>
+                    <div class="image-upload">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text">点击或拖拽上传图片（最多9张）</div>
+                        <div class="upload-count">已选0/9张</div>
+                    </div>
+                </div>
+                
+                <!-- 第五行：表情选择器入口 -->
+                <div class="form-row">
+                    <div class="emoji-section">
+                        <button type="button" class="emoji-btn">
+                            <span class="emoji-icon">😊</span>
+                            插入表情
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 提交按钮区 -->
+                <div class="submit-section">
+                    <button type="button" class="preview-btn">预览</button>
+                    <button type="submit" class="submit-btn">
+                        <div class="loading-spinner"></div>
+                        发布帖子
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        // 简单的编辑器功能模拟
+        document.addEventListener('DOMContentLoaded', function() {
+            const boldBtn = document.querySelector('.toolbar-btn:nth-child(1)');
+            const editor = document.querySelector('.editor-content');
+            
+            boldBtn.addEventListener('click', function() {
+                document.execCommand('bold', false, null);
+                editor.focus();
+            });
+            
+            // 图片上传区域点击事件
+            const imageUpload = document.querySelector('.image-upload');
+            imageUpload.addEventListener('click', function() {
+                alert('图片上传功能（最多9张图片）');
+            });
+            
+            // 表情按钮点击事件
+            const emojiBtn = document.querySelector('.emoji-btn');
+            emojiBtn.addEventListener('click', function() {
+                alert('表情选择器');
+            });
+            
+            // 预览按钮点击事件
+            const previewBtn = document.querySelector('.preview-btn');
+            previewBtn.addEventListener('click', function() {
+                alert('帖子预览功能');
+            });
+            
+            // 提交按钮点击事件
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('帖子发布功能（带加载状态）');
+            });
+        });
+    </script>
+</body>
+</html>
